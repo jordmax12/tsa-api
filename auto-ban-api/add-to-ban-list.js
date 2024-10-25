@@ -4,7 +4,7 @@ const handler = async (event) => {
     statusCode: 200,
     body: JSON.stringify({
       hello: 'world',
-      test: 2,
+      test: 3,
     }),
   };
 };

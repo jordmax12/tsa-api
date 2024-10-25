@@ -41,32 +41,60 @@ def handle_deployment(sls_config, stage, dry_run=True):
     print(sls_config)
     print(PurePath(sls_config).parent)
 
-    # os.chdir(PurePath(sls_config).parent)
+    regions = ['default']
 
-    try:
-        with open(current_working_dir + '/serverless.yml', 'r') as stream:
-            data_loaded = yaml.load(stream, Loader=yaml.BaseLoader)
+if sls_config in multi_region_services:
+        print('Hello Multi Region Services: ' + sls_config)
+        regions.extend(multi_region_services_additional_regions[sls_config])
+    else:
+        print('Non multi region service: ' + sls_config)
     
-        region = data_loaded['provider']['region']
-        print(f'\n-------------\nFound region in serverless config:')
-        pprint(region)
-    except:
-        region = 'us-east-1'
-        print(f'\n-------------\nCould not determine region from config, defaulting to us-east-1.')
+    print('logging regions')
+    print(regions)
 
-    sls_base = f"{current_working_dir}/node_modules/serverless/bin/serverless.js deploy"
-    sls_params = f"-s {stage} -r {region}"
-    command = ''
+    final_regions = []
 
-    print('\nExecuting:')
+    for region in regions:
+        # NOTE: Here if the region is default, we see if it exists in the serverless.yml
+        # of this service. Otherwise, use the region provided.
+        if region == 'default':
+            # NOTE: Our default region is us-east-1
+            final_region = 'us-east-1'
+            try:
+                with open(current_working_dir + '/' + sls_config, 'r') as stream:
+                    data_loaded = yaml.load(stream, Loader=yaml.BaseLoader)
+            
+                final_region = data_loaded['provider']['region']
+                print(f'\n-------------\nFound region in serverless config:')
+                pprint(region)
+            except:
+                print(f'\n-------------\nCould not determine region from config, defaulting to us-east-1.')
+        else:
+            final_region = region
 
-    sys.stdout.flush()
-    process = subprocess.Popen(
-        f"{sls_base} {command} {sls_params}", shell=True)
-    stdoutdata, stderrdata = process.communicate()
-    if process.returncode:
-        raise Exception(
-            f'\n---------\nCommand Failed while deploying!\n---------')
+        print('logging final_region')
+        print(final_region)
+        final_regions.append(final_region)
+
+    print('logging final_regions')
+    print(final_regions)
+
+    for final_region in final_regions:
+        sls_base = f"{current_working_dir}/node_modules/serverless/bin/serverless.js deploy"
+        sls_params = f"-s {stage} -r {final_region}"
+        command = ''
+
+        print('\nExecuting:')
+        print(f"{sls_base} {command} {sls_params}")
+
+        sys.stdout.flush()
+        process = subprocess.Popen(
+            f"{sls_base} {command} {sls_params}", shell=True)
+
+        stdoutdata, stderrdata = process.communicate()
+        if process.returncode:
+            raise Exception(
+                f'\n---------\nCommand Failed while deploying {sls_config}!\n---------')
 
     os.chdir(current_working_dir)
     results["deploy_succeeded"].append(sls_config)
