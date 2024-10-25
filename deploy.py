@@ -10,6 +10,11 @@ from itertools import chain, filterfalse
 from pprint import pprint
 from pathlib import PurePath
 
+priority = {
+    'first': [ 'auto-ban-api' ],
+    'last': [ ]
+}
+
 never_deploy_re = re.compile(r'^(|\..*|packages.*|.*/\..+|.*__.*)$')
 
 results = {
@@ -19,10 +24,25 @@ results = {
 
 current_working_dir = os.getcwd()
 
+results = {
+    "attempt_to_deploy": [],
+    "deploy_succeeded": [],
+}
 
-def handle_deployment(stage, dry_run=True):
+never_deploy_re = re.compile(r'^(|\..*|packages.*|.*/\..+|.*__.*)$')
 
-    print(f'\n-------------\nDeploying!!')
+def handle_deployment(sls_config, stage, dry_run=True):
+
+        results["attempt_to_deploy"].append(sls_config)
+    os.chdir(current_working_dir)
+    print(f'\n-------------\nDeploying Service: {sls_config}')
+    os.chdir(PurePath(sls_config).parent)
+
+    print(current_working_dir)
+    print(sls_config)
+    print(PurePath(sls_config).parent)
+
+    # os.chdir(PurePath(sls_config).parent)
 
     try:
         with open(current_working_dir + '/serverless.yml', 'r') as stream:
@@ -50,15 +70,117 @@ def handle_deployment(stage, dry_run=True):
             f'\n---------\nCommand Failed while deploying!\n---------')
 
     os.chdir(current_working_dir)
+    results["deploy_succeeded"].append(sls_config)
 
 
 def main(stage, branch, files=None, region='us-east-1', dry_run=True):
     try:
-        handle_deployment(stage)
+        files = files or []
+        print('\nNew Files:')
+        pprint(files)
+
+        try:
+            print('\nLook for previously not deployed')
+            with open(configs_not_deployed_file) as f:
+                configs_not_deployed = f.readlines()
+
+            if configs_not_deployed:
+                configs_not_deployed = [x.strip() for x in configs_not_deployed]
+                print('\nPreviously Not Deployed:')
+                pprint(configs_not_deployed)
+
+                files += configs_not_deployed
+            else:
+                print('\nNo failed deployments found in file')
+        except FileNotFoundError:
+            print('\nNo failed deployments file found')
+
+        finally:
+            print('\nFinal all files:')
+            pprint(files)
+
+        dirs = list(set([str(PurePath(i).parent) for i in files]))
+        pprint(dirs)
+
+        expanded_dirs = list(
+            set(chain(*[list(PurePath(i).parents) for i in dirs])))
+        expanded_dirs = [str(d) for d in expanded_dirs]
+        pprint(expanded_dirs)
+
+        # filter out things that should never be deployed
+        filtered_dirs = list(filterfalse(
+            never_deploy_re.match, dirs + expanded_dirs))
+        pprint(filtered_dirs)
+
+        paths_to_serverless_files = [
+            f"{d}/serverless.yml" for d in filtered_dirs]
+
+        configs = list(set(filter(os.path.exists, paths_to_serverless_files)))
+        configs.sort()
+
+        print("\nFound following serverless config files")
+        pprint(configs)
+
+        print("\nDeploy first services")
+        for service in priority.get('first', []):
+            config = f"{service}/serverless.yml"
+            if config in configs:
+                handle_deployment(config, stage)
+                configs.remove(config)
+
+        print("\nRemaining configs:")
+        pprint(configs)
+
+        print("\nDeploy second services")
+        # deploy dynamically, get everything but what is in the last
+        for config in configs.copy():
+            service = config.rpartition('/')[0]
+            if service not in priority.get('last', []):
+                handle_deployment(config, stage)
+                configs.remove(config)
+            else:
+                print(config)
+
+        print("\nRemaining configs:")
+        pprint(configs)
+
+        print("\nDeploy last services")
+
+        # deploy final services
+        for service in priority.get('last', []):
+            config = f"{service}/serverless.yml"
+            if config in configs:
+                handle_deployment(config, stage)
+                configs.remove(config)
     except Exception as e:
         raise e
     finally:
-        print('complete!')
+        os.chdir(current_working_dir)
+        configs += ['hello', 'test']
+
+        with open(configs_not_deployed_file, 'w') as f:
+            f.write('\n'.join(configs) + '\n')
+
+        print('\nRemaining configs:')
+        pprint(configs)
+
+        output_configs = ', '.join(configs)
+
+        sys.stdout.flush()
+        process = subprocess.Popen(
+            f'echo "remaining_configs={output_configs}" >> $GITHUB_OUTPUT', shell=True)
+        stdoutdata, stderrdata = process.communicate()
+
+        print('\nResults')
+        pprint(results)
+        print('\n')
+
+        deployed_configs = ', '.join(results.get('deploy_succeeded', []))
+
+        sys.stdout.flush()
+        process = subprocess.Popen(
+            f'echo "deployed_configs={deployed_configs}" >> $GITHUB_OUTPUT', shell=True)
+        stdoutdata, stderrdata = process.communicate()
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
