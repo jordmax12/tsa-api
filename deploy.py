@@ -15,6 +15,9 @@ priority = {
     'last': [ ]
 }
 
+multi_region_services = []
+multi_region_services_additional_regions = {}
+
 never_deploy_re = re.compile(r'^(|\..*|packages.*|.*/\..+|.*__.*)$')
 
 results = {
