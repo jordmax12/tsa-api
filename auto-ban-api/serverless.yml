@@ -1,0 +1,55 @@
+service: auto-ban-api
+app: tsa
+org: jordmax12
+frameworkVersion: '^3'
+configValidationMode: error
+
+provider:
+  name: aws
+  region: us-east-1
+  runtime: nodejs18.x
+  architecture: arm64
+  memorySize: 512
+  apiGateway:
+    apiKeys:
+      - value: ${ssm:/TSA_ADD_BAN_LIST_API_KEY}
+        description: API key for TSA auto ban API.
+    disableDefaultEndpoint: false
+  environment:
+    STAGE: ${sls:stage}
+    REGION: ${aws:region}
+    BAN_LIST_TABLE: !Ref BanListTable
+    DEALER_LIST_TABLE: !Ref DealerListTable
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - cloudwatch:*
+          Resource:
+            - '*'
+        - Effect: Allow
+          Action:
+            - dynamodb:*
+          Resource:
+            - !Sub "${BanListTable.Arn}"
+            - !Sub "${BanListTable.Arn}/index/*"
+            - !Sub "${DealerListTable.Arn}"
+            - !Sub "${DealerListTable.Arn}/index/*"
+
+resources: ${file(resources.yml)}
+
+functions:
+  addToBanList:
+    handler: add-to-ban-list.handler
+    name: tsa-add-to-ban-list
+    timeout: 30
+    events:
+      - http:
+          method: GET
+          path: add
+          private: true
+          cors: true
+
+plugins:
+  - serverless-plugin-monorepo

@@ -1,0 +1,13 @@
+node_modules
+
+.serverless/
+
+yarn-error.log
+
+*/yarn.lock
+
+results.json
+
+coverage
+
+*.DS_Store
