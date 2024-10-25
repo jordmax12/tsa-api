@@ -1,0 +1,35 @@
+name: CD
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency: CD-${{ github.ref }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    outputs:
+      branch: ${{ steps.branch.outputs.branch }}
+    steps:
+      - name: Set env.BRANCH
+        id: branch
+        run: echo "branch=$(echo $GITHUB_REF | cut -d'/' -f 3)" >> $GITHUB_OUTPUT
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Use Node.js 18.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'yarn'
+          cache-dependency-path: '**/yarn.lock'
+      - run: yarn install --frozen-lockfile
+      - name: Run Deploy Script
+        id: deploy
+        run: ./deploy.py -b ${{ steps.branch.outputs.branch }} ${{ steps.files.outputs.all }}
+        env:
+          SERVERLESS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}
+          SLS_AWS_REQUEST_MAX_RETRIES: 10
