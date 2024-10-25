@@ -27,6 +27,18 @@ jobs:
           cache: 'yarn'
           cache-dependency-path: '**/yarn.lock'
       - run: yarn install --frozen-lockfile
+      - id: files
+        # uses: jitterbit/get-changed-files@v1
+        uses: masesgroup/retrieve-changed-files@v2 # NOTE: this is temporary until the above one is patched with the set-output and node16 changes.
+        continue-on-error: true
+      - name: Download previously failed deploys
+        uses: dawidd6/action-download-artifact@v2
+        continue-on-error: true
+        with:
+          name: configs_not_deployed.${{ steps.branch.outputs.branch }}.txt
+          workflow_conclusion: completed
+          workflow: deploy.yml
+          branch: ${{ steps.branch.outputs.branch }}
       - name: Run Deploy Script
         id: deploy
         run: ./deploy.py -b ${{ steps.branch.outputs.branch }} ${{ steps.files.outputs.all }}
