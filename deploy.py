@@ -32,8 +32,7 @@ results = {
 never_deploy_re = re.compile(r'^(|\..*|packages.*|.*/\..+|.*__.*)$')
 
 def handle_deployment(sls_config, stage, dry_run=True):
-
-        results["attempt_to_deploy"].append(sls_config)
+    results["attempt_to_deploy"].append(sls_config)
     os.chdir(current_working_dir)
     print(f'\n-------------\nDeploying Service: {sls_config}')
     os.chdir(PurePath(sls_config).parent)
