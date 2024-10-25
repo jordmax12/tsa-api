@@ -73,6 +73,10 @@ def handle_deployment(sls_config, stage, dry_run=True):
 
 
 def main(stage, branch, files=None, region='us-east-1', dry_run=True):
+    configs = []
+
+    configs_not_deployed_file = f'configs_not_deployed.{branch}.txt'
+
     try:
         files = files or []
         print('\nNew Files:')
