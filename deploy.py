@@ -43,7 +43,7 @@ def handle_deployment(sls_config, stage, dry_run=True):
 
     regions = ['default']
 
-if sls_config in multi_region_services:
+    if sls_config in multi_region_services:
         print('Hello Multi Region Services: ' + sls_config)
         regions.extend(multi_region_services_additional_regions[sls_config])
     else:
