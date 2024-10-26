@@ -28,7 +28,6 @@ jobs:
           cache-dependency-path: '**/yarn.lock'
       - name: Set Working Directory
         run: cd $GITHUB_WORKSPACE
-
       - name: Install Dependencies
         working-directory: $GITHUB_WORKSPACE
         run: yarn install --frozen-lockfile
