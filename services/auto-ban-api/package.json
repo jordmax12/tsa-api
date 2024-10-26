@@ -1,7 +1,7 @@
 {
-  "name": "tsa-api",
+  "name": "tsa-auto-ban-api",
   "version": "1.0.0",
-  "description": "TSA API",
+  "description": "TSA auto ban API",
   "main": "index.js",
   "license": "MIT",
   "engines": {
@@ -9,14 +9,6 @@
     "yarn": ">=1.22",
     "node": "18"
   },
-  "workspaces": {
-    "packages": [
-      "/*",
-      "services/**",
-      "packages/**"
-    ]
-  },
-  "private": true,
   "devDependencies": {
     "eslint": "^8.57.1",
     "eslint-config-airbnb-base": "^15.0.0",
@@ -31,5 +23,15 @@
     "prettier": "^3.3.3",
     "serverless": "3.39.0",
     "serverless-plugin-monorepo": "^0.11.0"
+  },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.679.0",
+    "@aws-sdk/lib-dynamodb": "^3.679.0",
+    "axios": "^1.7.7",
+    "config-adaptor": "1.0.0",
+    "legacy-api-adaptor": "1.0.0",
+    "requests-adaptor": "1.0.0"
+
+    
   }
 }

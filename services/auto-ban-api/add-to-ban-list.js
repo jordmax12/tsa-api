@@ -1,9 +1,7 @@
+/* eslint-disable complexity */
+const { generateBadRequestResponse, validateAddToBanListRequest: validateRequest } = require('requests-adaptor');
 const { addToBanList } = require('./controllers/ban-list');
-const {
-  generateBadRequestResponse,
-  getFinalUsernames,
-  validateAddToBanListRequest: validateRequest,
-} = require('./helpers/requests');
+const { getFinalUsernames } = require('./helpers/add-to-ban-list');
 
 const handler = async ({ body: bodyRaw }) => {
   console.info(JSON.stringify(bodyRaw, null, 4));
@@ -14,7 +12,7 @@ const handler = async ({ body: bodyRaw }) => {
   console.info({ validatedRequest });
 
   if (!validatedRequest.valid) {
-    return generateBadRequestResponse(400, 'Missing one of required params: `habboName` or `discordId`');
+    return generateBadRequestResponse(400, validatedRequest.error);
   }
 
   const { found_param: foundParam } = validatedRequest;

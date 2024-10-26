@@ -1,0 +1,28 @@
+{
+    "name": "packages",
+    "version": "1.0.0",
+    "main": "index.js",
+    "private": true,
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "scripts": {
+        "build:ca": "mkdir -p ./config-adaptor/nodejs/node_modules && cp ./config-adaptor/nodejs/config-adaptor.js ./config-adaptor/nodejs/node_modules/",
+        "build:ra": "mkdir -p ./requests-adaptor/nodejs/node_modules && cp ./requests-adaptor/nodejs/requests-adaptor.js ./requests-adaptor/nodejs/node_modules/",
+        "build:laa": "mkdir -p ./legacy-api-adaptor/nodejs/node_modules && cp ./legacy-api-adaptor/nodejs/legacy-api-adaptor.js ./legacy-api-adaptor/nodejs/node_modules/",
+        "build": "npm run build:ca && npm run build:laa && npm run build:ra",
+        "postinstall": "npm run build"
+    },
+    "devDependencies": {
+        "eslint": "^8.57.1",
+        "eslint-config-airbnb-base": "^15.0.0",
+        "eslint-config-node": "^4.1.0",
+        "eslint-config-prettier": "^9.1.0",
+        "eslint-plugin-import": "^2.30.0",
+        "eslint-plugin-jest": "^28.8.3",
+        "eslint-plugin-node": "^11.1.0",
+        "eslint-plugin-prettier": "^5.2.1",
+        "jest": "^29.7.0",
+        "jest-environment-node": "^29.7.0"
+    }
+}

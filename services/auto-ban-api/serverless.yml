@@ -18,10 +18,9 @@ provider:
   environment:
     STAGE: ${sls:stage}
     REGION: ${aws:region}
+    BAN_LIST_TABLE: ${cf:database-${sls:stage}.BanListTable}
     LEGACY_API_ENDPOINT: ${ssm:/LEGACY_API_ENDPOINT}
     LEGACY_API_KEY: ${ssm:/LEGACY_API_KEY}
-    BAN_LIST_TABLE: !Ref BanListTable
-    DEALER_LIST_TABLE: !Ref DealerListTable
   iam:
     role:
       statements:
@@ -34,12 +33,8 @@ provider:
           Action:
             - dynamodb:*
           Resource:
-            - !Sub "${BanListTable.Arn}"
-            - !Sub "${BanListTable.Arn}/index/*"
-            - !Sub "${DealerListTable.Arn}"
-            - !Sub "${DealerListTable.Arn}/index/*"
-
-resources: ${file(resources.yml)}
+            - '${cf:database-${sls:stage}.BanListTableArn}'
+            - '${cf:database-${sls:stage}.BanListTableArn}/index/*'
 
 functions:
   addToBanList:

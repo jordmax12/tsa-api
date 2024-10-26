@@ -1,0 +1,19 @@
+service: database
+app: tsa
+org: jordmax12
+frameworkVersion: '^3'
+configValidationMode: error
+
+provider:
+  name: aws
+  region: us-east-1
+  tags:
+    APP: ${self:app}
+    SERVICE: ${self:service}
+  deploymentBucket:
+    blockPublicAccess: true
+    tags:
+      APP: ${self:app}
+      SERVICE: ${self:service}
+
+resources: ${file(config/resources.yml)}

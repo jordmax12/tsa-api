@@ -11,7 +11,7 @@ from pprint import pprint
 from pathlib import PurePath
 
 priority = {
-    'first': [ 'auto-ban-api' ],
+    'first': [ 'database' ],
     'last': [ ]
 }
 

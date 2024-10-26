@@ -1,10 +1,8 @@
+const { config } = require('config-adaptor');
 const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
 const { DynamoDBDocument, DeleteCommand, PutCommand, ScanCommand } = require('@aws-sdk/lib-dynamodb');
 
 const { BAN_LIST_TABLE, DYNAMO_DB_ENDPOINT, REGION } = process.env;
-
-const ARCADE_ID = 123;
-
 const dynamoDbClient = new DynamoDBClient({
   endpoint: DYNAMO_DB_ENDPOINT,
   region: REGION,
@@ -29,7 +27,7 @@ const addToBanList = async (habboName, description, scammedHabbo, scammedAmount)
     description: description || 'N/A',
     ...(scammedHabbo && { scammed_habbo: scammedHabbo }),
     ...(scammedAmount && { scammed_amount: scammedAmount }),
-    arcade_id: ARCADE_ID,
+    arcade_id: config.ARCADE_ID,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
   };

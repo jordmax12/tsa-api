@@ -1,7 +1,7 @@
 {
-  "name": "tsa-auto-ban-api",
+  "name": "dealer-api",
   "version": "1.0.0",
-  "description": "TSA auto ban API",
+  "description": "TSA dealer API",
   "main": "index.js",
   "license": "MIT",
   "engines": {
@@ -27,6 +27,8 @@
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.679.0",
     "@aws-sdk/lib-dynamodb": "^3.679.0",
-    "axios": "^1.7.7"
+    "axios": "^1.7.7",
+    "config-adaptor": "1.0.0",
+    "requests-adaptor": "1.0.0"
   }
 }
