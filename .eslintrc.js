@@ -43,14 +43,7 @@ module.exports = {
     'node/no-extraneous-require': [
       'error',
       {
-        allowModules: [
-          'aws-sdk',
-          'feastables-validate-token-v2',
-          'feastables-kinesis-adaptor',
-          'feastables-websocket-adaptor',
-          'feastables-date-helper',
-          'feastables-cognito-adaptor',
-        ],
+        allowModules: ['aws-sdk', 'config-adaptor', 'legacy-api-adaptor', 'requests-adaptor'],
       },
     ],
     'prettier/prettier': 'error',

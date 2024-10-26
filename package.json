@@ -16,6 +16,18 @@
       "packages/**"
     ]
   },
+  "scripts": {
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "test": "jest unit --detectOpenHandles",
+    "test:coverage": "jest unit --coverage",
+    "test:int": "jest int.test",
+    "test:workflow": "jest unit --coverage --detectOpenHandles --silent"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jordmax12/tsa-api.git"
+  },
   "private": true,
   "devDependencies": {
     "eslint": "^8.57.1",
