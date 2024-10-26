@@ -1,6 +1,6 @@
 service: database
 app: tsa
-# org: jordmax12
+org: jordmax12
 frameworkVersion: '^3'
 configValidationMode: error
 
