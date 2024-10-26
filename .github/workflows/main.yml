@@ -20,9 +20,9 @@ jobs:
           node-version: '18'
           cache: 'yarn'
           cache-dependency-path: '**/yarn.lock'
-      - name: Set Working Directory
-        run: cd $GITHUB_WORKSPACE
+      # - name: Set Working Directory
+      #   run: cd $GITHUB_WORKSPACE
       - name: Install Dependencies
-        working-directory: $GITHUB_WORKSPACE
+        working-directory: ${{ github.workspace }}
         run: yarn install --frozen-lockfile
       - run: yarn test:workflow
