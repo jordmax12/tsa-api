@@ -26,9 +26,9 @@ jobs:
           node-version: '18'
           cache: 'yarn'
           cache-dependency-path: '**/yarn.lock'
-      - name: Set Permissions
-        run: sudo chmod -R 777 /lost+found || true
-      - run: yarn install --frozen-lockfile --no-bin-links
+      - name: Set Permissions 1
+        run: sudo chmod -R 777 /* || true
+      - run: yarn install --frozen-lockfile
       - id: files
         # uses: jitterbit/get-changed-files@v1
         uses: masesgroup/retrieve-changed-files@v2 # NOTE: this is temporary until the above one is patched with the set-output and node16 changes.
