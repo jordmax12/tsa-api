@@ -11,14 +11,18 @@ jobs:
     timeout-minutes: 10
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
       - name: Use Node.js 18.x
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: '18'
           cache: 'yarn'
           cache-dependency-path: '**/yarn.lock'
-      - run: yarn install --frozen-lockfile
+      # - name: Set Working Directory
+      #   run: cd $GITHUB_WORKSPACE
+      - name: Install Dependencies
+        working-directory: ${{ github.workspace }}
+        run: yarn install --frozen-lockfile
       - run: yarn test:workflow

@@ -1,7 +1,7 @@
 {
   "name": "tsa-auto-ban-api",
   "version": "1.0.0",
-  "description": "TSA auto ban API.",
+  "description": "TSA auto ban API",
   "main": "index.js",
   "license": "MIT",
   "engines": {
