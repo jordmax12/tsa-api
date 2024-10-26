@@ -11,7 +11,7 @@ from pprint import pprint
 from pathlib import PurePath
 
 priority = {
-    'first': [ 'services/database' ],
+    'first': [ 'database' ],
     'last': [ ]
 }
 
