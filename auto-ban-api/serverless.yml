@@ -18,6 +18,8 @@ provider:
   environment:
     STAGE: ${sls:stage}
     REGION: ${aws:region}
+    LEGACY_API_ENDPOINT: ${ssm:/LEGACY_API_ENDPOINT}
+    LEGACY_API_KEY: ${ssm:/LEGACY_API_KEY}
     BAN_LIST_TABLE: !Ref BanListTable
     DEALER_LIST_TABLE: !Ref DealerListTable
   iam:
@@ -46,7 +48,7 @@ functions:
     timeout: 30
     events:
       - http:
-          method: GET
+          method: POST
           path: add
           private: true
           cors: true

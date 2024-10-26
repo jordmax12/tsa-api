@@ -3,6 +3,8 @@ const { DynamoDBDocument, DeleteCommand, PutCommand, ScanCommand } = require('@a
 
 const { BAN_LIST_TABLE, DYNAMO_DB_ENDPOINT, REGION } = process.env;
 
+const ARCADE_ID = 123;
+
 const dynamoDbClient = new DynamoDBClient({
   endpoint: DYNAMO_DB_ENDPOINT,
   region: REGION,
@@ -14,24 +16,27 @@ const dynamoDbClient = new DynamoDBClient({
 const CLIENT = DynamoDBDocument.from(dynamoDbClient);
 /**
  * Helper function to add a user to ban list.
- * @param {String} name Name of user that is being banned.
- * @param {String} scammedUser Name of user that was scammed (Optional).
+ * @param {String} habboName Name of user that is being banned.
+ * @param {String} description Description of the incident.
+ * @param {String} scammedHabbo Name of user that was scammed (Optional).
  * @param {String} scammedAmount Amount that was scammed (Optional).
  * @returns Ban list object that was created in DB.
  */
-const addToBanList = async (name, scammedUser, scammedAmount) => {
+const addToBanList = async (habboName, description, scammedHabbo, scammedAmount) => {
   const baseBanListObj = {
-    id: name, // NOTE: Could make this a UUID, but I think name is fine.
-    name,
-    ...(scammedUser && { scammed_user: scammedUser }),
+    id: habboName, // NOTE: Could make this a UUID, but I think habboName is fine.
+    habbo_name: habboName,
+    description: description || 'N/A',
+    ...(scammedHabbo && { scammed_habbo: scammedHabbo }),
     ...(scammedAmount && { scammed_amount: scammedAmount }),
+    arcade_id: ARCADE_ID,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
   };
 
   const params = {
     TableName: BAN_LIST_TABLE,
-    ConditionExpression: `attribute_not_exists(session_id)`,
+    ConditionExpression: `attribute_not_exists(id)`,
     Item: baseBanListObj,
   };
 
