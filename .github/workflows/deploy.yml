@@ -26,10 +26,7 @@ jobs:
           node-version: '18'
           cache: 'yarn'
           cache-dependency-path: '**/yarn.lock'
-      - name: Set Working Directory
-        run: cd $GITHUB_WORKSPACE
       - name: Install Dependencies
-        working-directory: $GITHUB_WORKSPACE
         run: yarn install --frozen-lockfile
       - id: files
         # uses: jitterbit/get-changed-files@v1
