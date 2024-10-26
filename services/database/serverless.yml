@@ -17,3 +17,6 @@ provider:
       SERVICE: ${self:service}
 
 resources: ${file(config/resources.yml)}
+
+plugins:
+  - serverless-plugin-monorepo
