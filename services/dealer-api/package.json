@@ -1,7 +1,7 @@
 {
   "name": "dealer-api",
   "version": "1.0.0",
-  "description": "TSA dealer API",
+  "description": "TSA dealer API.",
   "main": "index.js",
   "license": "MIT",
   "engines": {
