@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "description": "Database service",
     "main": "index.js",
-    "author": "Jordan Max",
+    "author": "Franchise",
     "license": "MIT",
     "engines": {
       "npm": "please-use-yarn",
