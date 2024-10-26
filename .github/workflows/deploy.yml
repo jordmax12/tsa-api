@@ -26,8 +26,8 @@ jobs:
           node-version: '18'
           cache: 'yarn'
           cache-dependency-path: '**/yarn.lock'
-      - name: Set Permissions 1
-        run: sudo chmod -R 777 /* || true
+      # - name: Set Permissions 1
+      #   run: sudo chmod -R 777 /* || true
       - run: yarn install --frozen-lockfile
       - id: files
         # uses: jitterbit/get-changed-files@v1
