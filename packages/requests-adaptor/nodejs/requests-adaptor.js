@@ -55,7 +55,7 @@ const validateAddToDealertRequest = (body) => {
   const { rank } = body;
 
   const validRanks = config.dealer_ranks;
-  if (!validRanks.includes(rank)) {
+  if (!(rank in validRanks)) {
     return {
       valid: false,
       error: `Invalid rank. Must be one of: ${validRanks.map((_rank) => `"${_rank}"`).join(' or ')}`,
