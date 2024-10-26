@@ -10,6 +10,8 @@
     "node": "18"
   },
   "devDependencies": {
+    "@aws-sdk/client-dynamodb": "^3.679.0",
+    "@aws-sdk/lib-dynamodb": "^3.679.0",
     "eslint": "^8.57.1",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-node": "^4.1.0",
@@ -25,13 +27,9 @@
     "serverless-plugin-monorepo": "^0.11.0"
   },
   "dependencies": {
-    "@aws-sdk/client-dynamodb": "^3.679.0",
-    "@aws-sdk/lib-dynamodb": "^3.679.0",
     "axios": "^1.7.7",
     "config-adaptor": "1.0.0",
     "legacy-api-adaptor": "1.0.0",
     "requests-adaptor": "1.0.0"
-
-    
   }
 }
