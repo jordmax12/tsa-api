@@ -54,7 +54,7 @@ const validateAddToDealertRequest = (body) => {
 
   const { rank } = body;
 
-  const validRanks = config.ranks;
+  const validRanks = config.dealer_ranks;
   if (!validRanks.includes(rank)) {
     return {
       valid: false,

@@ -84,7 +84,7 @@ def handle_deployment(sls_config, stage, dry_run=True):
 
     for final_region in final_regions:
         sls_base = f"{current_working_dir}/node_modules/serverless/bin/serverless.js deploy"
-        sls_params = f"-s {stage} -r {final_region} --verbose"
+        sls_params = f"-s {stage} -r {final_region}"
         command = ''
 
         test = os.getenv('SERVERLESS_ACCESS_KEY') 
