@@ -26,7 +26,7 @@ jobs:
           node-version: '18'
           cache: 'yarn'
           cache-dependency-path: '**/yarn.lock'
-      - run: sudo yarn install --frozen-lockfile
+      - run: yarn install --frozen-lockfile
       - id: files
         # uses: jitterbit/get-changed-files@v1
         uses: masesgroup/retrieve-changed-files@v2 # NOTE: this is temporary until the above one is patched with the set-output and node16 changes.
@@ -41,7 +41,7 @@ jobs:
           branch: ${{ steps.branch.outputs.branch }}
       - name: Run Deploy Script
         id: deploy
-        run: sudo ./deploy.py -b ${{ steps.branch.outputs.branch }} ${{ steps.files.outputs.all }}
+        run: ./deploy.py -b ${{ steps.branch.outputs.branch }} ${{ steps.files.outputs.all }}
         env:
           SERVERLESS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}
           SLS_AWS_REQUEST_MAX_RETRIES: 10
