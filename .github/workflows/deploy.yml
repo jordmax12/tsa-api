@@ -45,3 +45,9 @@ jobs:
         env:
           SERVERLESS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}
           SLS_AWS_REQUEST_MAX_RETRIES: 10
+      - uses: actions/upload-artifact@v3
+        name: Upload list of services that need to be deployed next time
+        if: always()
+        with:
+          name: configs_not_deployed.${{ steps.branch.outputs.branch }}.txt
+          path: configs_not_deployed.${{ steps.branch.outputs.branch }}.txt
